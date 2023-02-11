@@ -31,7 +31,6 @@ impl<'a, T: 'a> IterView<'a> for Option<T> {
     }
 }
 
-// impl IterView for Result
 impl<'a, T: 'a, E: 'a> IterView<'a> for Result<T, E> {
     type Item = &'a T;
     type Iter = std::result::Iter<'a, T>;
@@ -48,6 +47,62 @@ where
     type Iter = T::Iter;
     fn iter(&'a self) -> Self::Iter {
         self.as_ref().iter()
+    }
+}
+
+impl<'a, K, V> IterView<'a> for std::collections::HashMap<K, V>
+where
+    K: Eq + std::hash::Hash + 'a,
+    V: 'a,
+{
+    type Item = (&'a K, &'a V);
+    type Iter = std::collections::hash_map::Iter<'a, K, V>;
+    fn iter(&'a self) -> Self::Iter {
+        self.iter()
+    }
+}
+
+impl<'a, T> IterView<'a> for std::collections::LinkedList<T>
+where
+    T: 'a,
+{
+    type Item = &'a T;
+    type Iter = std::collections::linked_list::Iter<'a, T>;
+    fn iter(&'a self) -> Self::Iter {
+        self.iter()
+    }
+}
+
+impl<'a, T> IterView<'a> for std::collections::BinaryHeap<T>
+where
+    T: 'a,
+{
+    type Item = &'a T;
+    type Iter = std::collections::binary_heap::Iter<'a, T>;
+    fn iter(&'a self) -> Self::Iter {
+        self.iter()
+    }
+}
+
+impl<'a, T> IterView<'a> for std::collections::VecDeque<T>
+where
+    T: 'a,
+{
+    type Item = &'a T;
+    type Iter = std::collections::vec_deque::Iter<'a, T>;
+    fn iter(&'a self) -> Self::Iter {
+        self.iter()
+    }
+}
+
+impl<'a, T> IterView<'a> for std::collections::HashSet<T>
+where
+    T: Eq + std::hash::Hash + 'a,
+{
+    type Item = &'a T;
+    type Iter = std::collections::hash_set::Iter<'a, T>;
+    fn iter(&'a self) -> Self::Iter {
+        self.iter()
     }
 }
 
