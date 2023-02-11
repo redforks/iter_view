@@ -40,6 +40,17 @@ impl<'a, T: 'a, E: 'a> IterView<'a> for Result<T, E> {
     }
 }
 
+impl<'a, T> IterView<'a> for Box<T>
+where
+    T: IterView<'a>,
+{
+    type Item = T::Item;
+    type Iter = T::Iter;
+    fn iter(&'a self) -> Self::Iter {
+        self.as_ref().iter()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
