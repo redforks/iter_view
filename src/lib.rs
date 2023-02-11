@@ -3,28 +3,28 @@ use std::slice;
 /// Like IntoIterator, but not consume current object, return a readonly iterator.
 pub trait IterView<'a> {
     type Item: 'a;
-    type Iter: Iterator<Item = &'a Self::Item>;
+    type Iter: Iterator<Item = Self::Item>;
     fn iter(&'a self) -> Self::Iter;
 }
 
 impl<'a, T: 'a> IterView<'a> for Vec<T> {
-    type Item = T;
-    type Iter = slice::Iter<'a, Self::Item>;
+    type Item = &'a T;
+    type Iter = slice::Iter<'a, T>;
     fn iter(&'a self) -> Self::Iter {
         self[..].iter()
     }
 }
 
 impl<'a, T: 'a> IterView<'a> for [T] {
-    type Item = T;
-    type Iter = slice::Iter<'a, Self::Item>;
+    type Item = &'a T;
+    type Iter = slice::Iter<'a, T>;
     fn iter(&'a self) -> Self::Iter {
         self.iter()
     }
 }
 
 impl<'a, T: 'a> IterView<'a> for Option<T> {
-    type Item = T;
+    type Item = &'a T;
     type Iter = std::option::Iter<'a, T>;
     fn iter(&'a self) -> Self::Iter {
         self.iter()
@@ -33,7 +33,7 @@ impl<'a, T: 'a> IterView<'a> for Option<T> {
 
 // impl IterView for Result
 impl<'a, T: 'a, E: 'a> IterView<'a> for Result<T, E> {
-    type Item = T;
+    type Item = &'a T;
     type Iter = std::result::Iter<'a, T>;
     fn iter(&'a self) -> Self::Iter {
         self.iter()
