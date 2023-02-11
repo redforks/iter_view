@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Create iterator from readonly reference"
 repository = "https://github.com/redforks/iter_view"
-license = "MIT or Apache-2.0"
+license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
