@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::slice;
 
 /// Like IntoIterator, but not consume current object, return a readonly iterator.
@@ -106,6 +107,36 @@ where
     }
 }
 
+/// Using a function to iter view a value.
+pub fn iter<T, O, F, I>(o: &O, f: F) -> FuncIterView<T, O, F, I> {
+    FuncIterView {
+        f,
+        o,
+        t: PhantomData,
+        i: PhantomData,
+    }
+}
+
+pub struct FuncIterView<'a, T, O, F, I> {
+    f: F,
+    o: &'a O,
+    t: PhantomData<T>,
+    i: PhantomData<I>,
+}
+
+impl<'a, T, O, F, I> IterView<'a> for FuncIterView<'a, T, O, F, I>
+where
+    T: 'a,
+    F: Fn(&O) -> I,
+    I: Iterator<Item = T> + 'a,
+{
+    type Item = T;
+    type Iter = I;
+    fn iter(&self) -> Self::Iter {
+        (self.f)(self.o)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -146,5 +177,14 @@ mod tests {
         let v: Result<(), &str> = Err("foo");
         let mut iter = iter_view(&v);
         assert_eq!(iter.next(), None);
+    }
+
+    #[test]
+    fn iter_func() {
+        let mut vals = iter_view(&iter(&3, |v: &usize| 0..*v));
+        assert_eq!(vals.next(), Some(0));
+        assert_eq!(vals.next(), Some(1));
+        assert_eq!(vals.next(), Some(2));
+        assert_eq!(vals.next(), None);
     }
 }
