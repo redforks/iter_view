@@ -106,7 +106,7 @@ pub trait IterView<'a> {
     fn iter(&'a self) -> Self::Iter;
 }
 
-impl<'a, T: 'a + IterView<'a>> IterView<'a> for &'a T {
+impl<'a, T: 'a + IterView<'a> + ?Sized> IterView<'a> for &'a T {
     type Item = T::Item;
     type Iter = T::Iter;
     fn iter(&'a self) -> Self::Iter {
@@ -247,7 +247,7 @@ where
 mod tests {
     use super::*;
 
-    fn iter_view<'a, T: IterView<'a>>(o: &'a T) -> T::Iter {
+    fn iter_view<'a, T: IterView<'a> + ?Sized>(o: &'a T) -> T::Iter {
         o.iter()
     }
 
@@ -292,5 +292,15 @@ mod tests {
         assert_eq!(vals.next(), Some(1));
         assert_eq!(vals.next(), Some(2));
         assert_eq!(vals.next(), None);
+    }
+
+    #[test]
+    fn iter_slice() {
+        let v: &[u8] = &[1, 2, 3];
+        let mut iter = iter_view(&v);
+        assert_eq!(iter.next(), Some(&1));
+        assert_eq!(iter.next(), Some(&2));
+        assert_eq!(iter.next(), Some(&3));
+        assert_eq!(iter.next(), None);
     }
 }
