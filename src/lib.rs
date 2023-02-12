@@ -114,6 +114,14 @@ impl<'a, T: 'a + IterView<'a> + ?Sized> IterView<'a> for &'a T {
     }
 }
 
+impl<'a, T: 'a, const N: usize> IterView<'a> for [T; N] {
+    type Item = &'a T;
+    type Iter = slice::Iter<'a, T>;
+    fn iter(&'a self) -> Self::Iter {
+        self[..].iter()
+    }
+}
+
 impl<'a, T: 'a> IterView<'a> for Vec<T> {
     type Item = &'a T;
     type Iter = slice::Iter<'a, T>;
@@ -297,6 +305,16 @@ mod tests {
     #[test]
     fn iter_slice() {
         let v: &[u8] = &[1, 2, 3];
+        let mut iter = iter_view(&v);
+        assert_eq!(iter.next(), Some(&1));
+        assert_eq!(iter.next(), Some(&2));
+        assert_eq!(iter.next(), Some(&3));
+        assert_eq!(iter.next(), None);
+    }
+
+    #[test]
+    fn iter_array() {
+        let v: [u8; 3] = [1, 2, 3];
         let mut iter = iter_view(&v);
         assert_eq!(iter.next(), Some(&1));
         assert_eq!(iter.next(), Some(&2));
