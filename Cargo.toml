@@ -1,6 +1,6 @@
 [package]
 name = "iter_view"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "Create iterator from readonly reference"
 repository = "https://github.com/redforks/iter_view"
