@@ -8,6 +8,14 @@ pub trait IterView<'a> {
     fn iter(&'a self) -> Self::Iter;
 }
 
+impl<'a, T: 'a + IterView<'a>> IterView<'a> for &'a T {
+    type Item = T::Item;
+    type Iter = T::Iter;
+    fn iter(&'a self) -> Self::Iter {
+        (*self).iter()
+    }
+}
+
 impl<'a, T: 'a> IterView<'a> for Vec<T> {
     type Item = &'a T;
     type Iter = slice::Iter<'a, T>;
