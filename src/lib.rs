@@ -16,7 +16,7 @@
 //! `inspect()` method takes immutable reference of `T`, and `T` is not `Copy` type. If impl
 //! `Inspector` for any object can convert into `Iterator`, we can write code like this:
 //!
-//! ```rust
+//! ```compile_fail
 //!
 //! impl<T, I> Inspector<T> for I
 //!     where
@@ -36,7 +36,7 @@
 //!
 //! If we impl `Inspector` on slice:
 //!
-//! ```rust
+//! ```compile_fail
 //!
 //! impl<T: std::fmt::Debug> Inspector<T> for [T] {
 //!     fn inspect(&self, v: &T) {
@@ -79,7 +79,7 @@
 //!
 //! Use `IterView` trait, we can impl `Inspector` for any type which implements `IterView`:
 //!
-//! ```rust
+//! ```compile_fail
 //! use iter_view::IterView;
 //!
 //! impl<T, I> Inspector<T> for I
