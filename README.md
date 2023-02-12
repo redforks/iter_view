@@ -1,6 +1,6 @@
-# `iter_view` crate for `rust`
+# iter_view
 
-Rust has `IntoIterator` trait, to create `Iterator` from a type. `IntoIterator` consumes the type, 
+Rust has `IntoIterator` trait, to create `Iterator` from a type. `IntoIterator` consumes the type,
 many types provides `iter()` method to create `Iterator` from immutable reference without consuming the type.
 But no trait for `iter()` method.
 
@@ -21,14 +21,14 @@ trait Inspector<T> {
 ```rust
 
 impl<T, I> Inspector<T> for I
-where
-    I: IntoIterator<Item = T>,
-    T: std::fmt::Debug, 
+    where
+        I: IntoIterator<Item = T>,
+        T: std::fmt::Debug,
 {
     fn inspect(&self, v: &T) {
         for item in self {
             println!("{:?}", item);
-        } 
+        }
     }
 }
 
@@ -44,7 +44,7 @@ impl<T: std::fmt::Debug> Inspector<T> for [T] {
     fn inspect(&self, v: &T) {
         for item in self {
             println!("{:?}", item);
-        } 
+        }
     }
 }
 
@@ -84,16 +84,17 @@ Use `IterView` trait, we can impl `Inspector` for any type which implements `Ite
 ```rust
 
 impl<T, I> Inspector<T> for I
-where
-    I: IterView<Item = T>,
-    T: std::fmt::Debug, 
+    where
+        I: IterView<Item = T>,
+        T: std::fmt::Debug,
 {
     fn inspect(&self, v: &T) {
         for item in self.iter() {
             println!("{:?}", item);
-        } 
+        }
     }
 }
 
 ```
 
+License: MIT OR Apache-2.0
